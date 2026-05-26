@@ -1,0 +1,13 @@
+﻿{
+  "dbConfig": {
+    "host": "127.0.0.1",
+    "user": "root",
+    "password": "162639",
+    "database": "vue3"
+  },
+  "JWTConfig": {
+    "secret": "vueAdmin3",
+    "expiresIn": "1h",
+    "reFlushExpiresIn": "8h"
+  }
+}
