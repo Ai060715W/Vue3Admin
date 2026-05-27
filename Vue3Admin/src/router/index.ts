@@ -29,6 +29,12 @@ export const constantRoutes :RouteRecordRaw[] =[
     name:'mine',
     component:()=>import('@/views/mine/mine.vue'),
     meta:{ title:'个人中心' }
+  },
+  {
+    path:'/chat',
+    name:'chat',
+    component:()=>import('@/views/Demo/chatDemo.vue'),
+    meta:{ title:'AI助手' }
   }
 ]
 export  const dynamicRoutes :RouteRecordRaw[] =[

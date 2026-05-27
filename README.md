@@ -1,129 +1,167 @@
 # vue3admin
 
 ## 简介
-本项目是一个基于Vue 3、Vite 2、Element Plus、TypeScript、Axios、Vue Router、Pinia、Fetch API以及Web Audio API构建的后台电商管理系统。项目采用pnpm进行扁平化依赖管理，确保依赖的一致性和项目的稳定性。后端部分则使用Node.js、Express、MySQL以及OpenAI SDK，结合通义千问模型等技术构建，为系统提供强大的后端支持。
+本项目是一个基于 Vue 3、Vite 2、Element Plus、TypeScript、Axios、Vue Router、Pinia、Fetch API 以及 Web Audio API 构建的后台电商管理系统。项目采用 pnpm 进行扁平化依赖管理，确保依赖的一致性和项目的稳定性。
+
+后端部分使用 Node.js、Express、MySQL 构建 RESTful API，并集成 **DeepSeek 大模型**（通过 OpenAI 兼容 SDK）实现 AI 智能问答功能，支持流式响应、用户隔离与多轮对话，为系统提供强大的 AI 支持。
 
 ## 项目结构
-项目结构清晰，便于开发者理解和维护。主要分为前端和后端两个部分，前端负责界面展示和用户交互，后端负责数据处理和业务逻辑。下面是项目的主要结构：
 ```
-├── .vscode
-│   └── 存放 Visual Studio Code 编辑器的配置文件。
-├── apiserver
-│   └── 存放后端服务的代码。  
-│   ├── config
-│       └── 存放后端配置文件，如数据库配置、API密钥等。
-│   ├── node_modules
-│       └── 存放项目依赖的第三方库。
-│   ├── public
-│       └── 存放静态资源，如前端构建后的文件、图片等。
-│   ├── router
-│       └── 存放 Express 路由配置文件，定义了应用的路由和控制器。
-│   ├── express.js
-│       └── Express 应用的主文件，配置了 Express 应用的中间件和路由。
-│   ├── index.js
-│       └── Express 应用的入口文件，用于启动服务器。
-│   ├── serve
-│       └── 存放服务相关的代码，如 API 服务的实现。
-│   ├── utils
-│       └── 存放工具函数和辅助模块，如数据库操作工具、验证工具等。
-│   ├── index.js
-│       └── 入口文件。
+Vue3Admin/
+├── .vscode/                         # VS Code 编辑器配置
+│   └── extensions.json              # 推荐扩展列表
+├── apisever/                        # 后端 Express 服务
+│   ├── config/
+│   │   └── default.json             # 数据库 & JWT & DeepSeek 配置
+│   ├── public/www/
+│   │   └── default.png              # 默认图片资源
+│   ├── router/
+│   │   ├── express.js               # Express 实例 & 中间件（JWT、CORS）
+│   │   └── index.js                 # 全部 API 路由（含 SSE 流式聊天）
+│   ├── serve/                       # 业务逻辑模块
+│   │   ├── Admin/admin.js           # 管理员操作（用户增删改）
+│   │   ├── business/business.js     # 商家 CRUD
+│   │   ├── chat/chat.js             # AI 聊天（DeepSeek + OpenAI SDK）
+│   │   ├── file/file.js             # 文件上传处理
+│   │   ├── login/login.js           # 登录认证（bcrypt + JWT）
+│   │   ├── order/order.js           # 订单管理
+│   │   ├── product/product.js       # 商品管理
+│   │   ├── register/register.js     # 用户注册
+│   │   └── Todo/todo.js             # 待办事项
+│   ├── utils/mysql/
+│   │   └── index.js                 # MySQL 连接池 & CRUD 封装
+│   ├── index.js                     # 服务入口（端口 3000）
 │   ├── package.json
-│       └── 定义了项目的元数据和依赖信息。
 │   └── pnpm-lock.yaml
-        └── 记录了项目依赖的确切版本，确保依赖的一致性。
-├── node_modules
-│   └── 存放项目依赖的第三方库。
-├── public
-│   └── 存放静态资源，如 HTML、CSS、JavaScript 文件等。
-├── src
-│   ├── assets
-│   │   └── 存放静态资源，如图片、样式等。
-│   ├── components
-│   │   └── 存放 Vue 组件。
-│   ├── Constants
-│   │   └── 存放常量配置。
-│   ├── directive
-│   │   └── 存放自定义指令。
-│   ├── router
-│   │   └── 存放 Vue Router 配置。
-│   ├── serve
-│   │   └── 可能用于存放服务相关的代码，如 API 服务。
-│   ├── stores
-│   │   └── 存放 Pinia 状态管理的存储。
-│   ├── types
-│   │   └── 存放 TypeScript 类型定义。
-│   ├── utils
-│   │   └── 存放工具函数。
-│   ├── views
-│   │   └── 存放页面视图。
-│   ├── App.vue
-│   │   └── Vue 应用的根组件。
-│   ├── main.ts
-│   │   └── Vue 应用的入口文件。
-├── 文档
-│   ├── 聊天接口文档.md
-│   │   └── 描述聊天接口的详细信息。
-│   ├── 聊天配置文档.md
-│   │   └── 描述聊天功能的配置方法。
-│   ├── 前端Pinia状态仓库文档.md
-│   │   └── 介绍如何在前端使用 Pinia 进行状态管理。
-│   ├── 前端Util文档.md
-│   │   └── 介绍前端工具函数的使用。
-│   ├── 前端自定义指令文档.md
-│   │   └── 介绍如何创建和使用前端自定义指令。
-│   ├── 前端路由配置文档.md
-│   │   └── 介绍 Vue Router 的配置和使用。
+├── public/                          # Vite 静态资源
+│   ├── favicon.ico
+│   └── img.png
+├── src/                             # 前端源码
+│   ├── assets/                      # 静态资源
+│   │   ├── base.css
+│   │   └── logo.svg
+│   ├── components/                  # 公共组件
+│   │   ├── ProductComponet.vue
+│   │   └── icons/                   # SVG 图标组件
+│   │       ├── IconCommunity.vue
+│   │       ├── IconDocumentation.vue
+│   │       ├── IconEcosystem.vue
+│   │       ├── IconSupport.vue
+│   │       └── IconTooling.vue
+│   ├── Constants/
+│   │   └── Cache-key.ts             # 缓存键常量
+│   ├── directive/                   # 自定义指令
+│   │   ├── index.ts
+│   │   └── permission/
+│   │       └── permission.ts        # 权限指令 v-permission
+│   ├── router/
+│   │   └── index.ts                 # Vue Router（常量路由 + 动态路由 + 守卫）
+│   ├── serve/                       # 前端 API 调用层
+│   │   ├── Admin/admin.ts           # 管理员接口
+│   │   ├── Business/business.ts     # 商家接口
+│   │   ├── chat/chat.ts             # 聊天接口（Fetch 流式请求）
+│   │   ├── InfoGet/InfoGet.ts       # 通用查询接口
+│   │   ├── login/login.ts           # 登录接口
+│   │   ├── Order/order.ts           # 订单接口
+│   │   ├── reigster/register.ts     # 注册接口
+│   │   └── Todo/todo.ts             # 待办接口
+│   ├── stores/                      # Pinia 状态管理
+│   │   ├── index.ts
+│   │   └── modules/
+│   │       ├── permission.ts        # 权限 & 动态路由
+│   │       └── users.ts             # 用户信息 & Token
+│   ├── types/                       # TypeScript 类型定义
+│   │   ├── Business.d.ts
+│   │   ├── login.d.ts
+│   │   ├── register.d.ts
+│   │   └── vue-router.d.ts
+│   ├── utils/                       # 工具函数
+│   │   ├── rules.ts                 # 表单验证规则
+│   │   ├── service.ts               # Axios 实例 & 拦截器
+│   │   ├── toString.ts
+│   │   ├── cache/
+│   │   │   └── cookies.ts           # Token Cookie 管理
+│   │   └── file/
+│   │       ├── CreateChunk.js       # 大文件分片
+│   │       ├── fileUpload.ts        # 文件上传逻辑
+│   │       └── worker.js            # Web Worker
+│   ├── views/                       # 页面视图
+│   │   ├── login/login.vue          # 登录 / 注册页
+│   │   ├── menu/menu.vue            # 首页（Hero + 入驻商家）
+│   │   ├── mine/mine.vue            # 个人中心（多角色面板）
+│   │   ├── Demo/
+│   │   │   ├── audioVisualzationDemo.vue  # 音频可视化演示
+│   │   │   └── chatDemo.vue               # AI 智能问答（左侧栏 + 对话区）
+│   │   ├── Detail/
+│   │   │   ├── BusinessDetail/businessDetail.vue  # 商家详情
+│   │   │   └── BusinessList/businessList.vue      # 全部商家列表
+│   │   └── Control/
+│   │       ├── Control/control.vue        # 用户管理后台
+│   │       ├── Control/userList.ts
+│   │       ├── BusinessControl/BusinessControl.vue # 商家后台
+│   │       └── FileControl/file.vue       # 文件管理
+│   ├── App.vue                      # 根组件（全局导航栏）
+│   └── main.ts                      # Vue 应用入口
+├── 文档/                            # 项目文档
+│   ├── 接口文档.md
 │   ├── 后端配置文档.md
-│   │   └── 描述后端服务的配置和部署。
-│   └── 接口文档.md
-│       └── 详细说明后端 API 接口的结构和使用方法。
+│   ├── 前端路由配置文档.md
+│   ├── 前端自定义指令文档.md
+│   ├── 前端Piania状态仓库文档.md
+│   ├── 前端Util文档.md
+│   ├── ai聊天接口文档.md
+│   └── ai聊天配置文档.md
+├── index.html                       # HTML 模板
+├── vite.config.ts                   # Vite 构建配置
+├── tsconfig.json                    # TypeScript 配置
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── env.d.ts                         # 环境类型声明
+├── package.json                     # 前端依赖
+├── pnpm-lock.yaml
+└── pnpm-workspace.yaml
 ```
-### 前端
-- **src**：存放前端源代码。
-    - **assets**：存放静态资源，如图片、样式等。
-    - **components**：存放Vue组件。
-    - **views**：存放页面视图。
-    - **router**：Vue Router配置文件。
-    - **store**：Pinia状态管理配置文件。
-    - **api**：Axios API调用配置文件。
-    - **App.vue**：Vue应用的根组件。
-    - **main.ts**：Vue应用的入口文件。
-
-### 后端
-- **apiserver**：后端服务目录。
-    - **controllers**：存放控制器，处理HTTP请求。
-    - **models**：存放数据库模型。
-    - **routes**：路由配置文件。
-    - **utils**：工具函数和辅助模块。
-    - **app.js**：Express应用的入口文件。
 
 ## 安装指南
-### 前后端依赖安装
-1. 克隆项目到本地。
-2. 进入项目根目录，使用pnpm安装前端依赖：
-   ```shell
-   pnpm i
-   ```
-3. 进入后端服务目录，使用pnpm安装后端依赖：
-   ```shell
-   cd ./apiserver
-   pnpm i
-   ```
+### 前端依赖
+```shell
+cd Vue3Admin
+pnpm install
+```
+
+### 后端依赖
+```shell
+cd Vue3Admin/apisever
+pnpm install
+```
+
+### 数据库
+1. 创建 MySQL 数据库 `vue3`
+2. 修改 `apisever/config/default.json` 中的数据库连接信息
+3. 项目首次启动时会自动建表
 
 ## 运行指南
-### 前端
-1. 在项目根目录下，运行以下命令启动前端开发服务器：
-   ```shell
-   pnpm run dev
-   ```
+### 前端（开发模式）
+```shell
+cd Vue3Admin
+pnpm dev
+```
+访问 http://localhost:5173
 
 ### 后端
-1. 在后端服务目录下，运行以下命令启动后端服务：
-   ```shell
-   cd ./apiserver
-   node index.js
-   ```
+```shell
+cd Vue3Admin/apisever
+node index.js
+```
+服务运行在 http://localhost:3000
+
+### 演示账号
+| 账号 | 密码 | 角色 |
+|------|------|------|
+| admin | Admin@123 | 管理员 |
+| zhangsan | Zhangsan@123 | 普通用户 |
+| lisi | Lisi@123456 | 普通用户 |
+| shangjia | Shangjia@123 | 商家 |
 
 ## 文档和资源
 项目文档存放在根目录下的`文档`文件夹中，包括但不限于：
@@ -230,12 +268,15 @@
   - 支持复杂的查询和事务处理
   - 拥有广泛的社区和工具支持
 
-#### OpenAI SDK
-- **描述**：OpenAI 提供了一系列软件开发工具包（SDK），允许开发者将 AI 功能集成到他们的应用程序中。
+#### OpenAI SDK + DeepSeek
+- **描述**：项目使用 OpenAI 兼容 SDK 接入 **DeepSeek** 大模型，实现 AI 智能问答功能。
 - **特点**：
-  - 访问 OpenAI 提供的各种 AI 模型
-  - 支持自然语言处理、图像识别等多种 AI 功能
-  - 提供了易于使用的 API 和文档
+  - 兼容 OpenAI API 格式，无缝切换模型
+  - 支持 SSE（Server-Sent Events）流式响应
+  - 基于 JWT 的用户会话隔离
+  - 多轮对话上下文记忆
+  - 对话历史本地持久化（localStorage）
+  - 支持新建/切换/搜索/删除对话
 
 这些技术栈的选择旨在提供一个强大、灵活且易于维护的开发环境，以支持构建一个高效、可扩展的电商后台管理系统。
 

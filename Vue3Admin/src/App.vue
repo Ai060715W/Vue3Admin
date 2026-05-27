@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import {useUserStoreHook} from "@/stores/modules/users";
 import router from "@/router";
+import {useRoute} from "vue-router";
 import {getBusinessInfo} from "@/serve/InfoGet/InfoGet";
 import {ElMessage} from "element-plus";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, computed} from "vue";
 import {createShop} from "@/serve/Business/business";
 const userStore = useUserStoreHook();
+const route = useRoute();
 const isAdmin=ref(false)
 const isBusiness=ref(false)
 onMounted(async ()=>{
@@ -28,7 +30,8 @@ const isShow = ref(false);
         <span class="logo-text">Vue3Admin</span>
       </div>
       <nav class="nav-links">
-        <span class="nav-item active" @click="router.push('/')">首页</span>
+        <span class="nav-item" :class="{ active: route.path === '/' }" @click="router.push('/')">首页</span>
+        <span class="nav-item" :class="{ active: route.path === '/chat' }" @click="router.push('/chat')">AI助手</span>
       </nav>
     </div>
     <div class="header-right">
