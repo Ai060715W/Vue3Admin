@@ -20,8 +20,8 @@ const login = async (data: LoginAttribute) => {
             user.username=data.username
             user.roles=res.data.result[0].permission.split(',')
        ElMessage.success(res.data.msg)
-       await router.replace({path: '/',replace:true})
-       location.reload()} else {
+       // 修复：使用 window.location 跳转避免 router.replace + location.reload 竞态问题
+       window.location.href = '/'} else {
        ElMessage.error(res.data.msg)
 
         }

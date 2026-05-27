@@ -3,7 +3,7 @@ import { useUserStoreHook} from "@/stores/modules/users";
 import {usePermissionStoreHook} from "@/stores/modules/permission";
 import {getToken} from "@/utils/cache/cookies";
 import {ElMessage} from "element-plus";
-const whiteTable:string[]=['/login','/forget','/']
+const whiteTable:string[]=['/login','/forget','/','/businessList','/mine']
 export const constantRoutes :RouteRecordRaw[] =[
   {path:'/*',
   redirect:'/'},
@@ -19,6 +19,16 @@ export const constantRoutes :RouteRecordRaw[] =[
   },{
   path:'/demo1',
     component: ()=>import('@/views/Demo/audioVisualzationDemo.vue')
+  },{
+    path:'/businessList',
+    name:'businessList',
+    component:()=>import('@/views/Detail/BusinessList/businessList.vue'),
+    meta:{ title:'全部商家' }
+  },{
+    path:'/mine',
+    name:'mine',
+    component:()=>import('@/views/mine/mine.vue'),
+    meta:{ title:'个人中心' }
   }
 ]
 export  const dynamicRoutes :RouteRecordRaw[] =[
@@ -89,46 +99,40 @@ export default router
 router.beforeEach(async (to, from, next) => {
   const useStore = useUserStoreHook();
   const userPermissionStore = usePermissionStoreHook();
-  await useStore.getUserInfo() // 获取用户信息 包括权限信息等
   const tokenExists = getToken();
-  const hasRoles = useStore.roles.length !== 0;
-  const routesNeedToAdd = userPermissionStore.addRoutes.length === 0;
+
+  // 白名单路由直接放行
+  if (whiteTable.includes(to.path)) {
+    // 已登录用户访问首页时，加载动态路由
+    if (tokenExists && to.path === '/') {
+      await useStore.getUserInfo();
+      const roles = useStore.roles.filter((r: string) => r !== '');
+      if (roles.length > 0 && userPermissionStore.addRoutes.length === 0) {
+        userPermissionStore.setRoutes(roles);
+        userPermissionStore.addRoutes.forEach((route: RouteRecordRaw) => router.addRoute(route));
+      }
+    }
+    next();
+    return;
+  }
 
   if (tokenExists) {
-    if (hasRoles) {
-      if (routesNeedToAdd) {
-        userPermissionStore.setRoutes(useStore.roles);
-        userPermissionStore.addRoutes.forEach((route: RouteRecordRaw) => router.addRoute(route));
-        // 只调用一次next，之前已经错误地调用了两次
-        next({...to, replace: true});
-      } else {
-        // 这里原本没有逻辑，但为了清晰，显式调用next继续导航
-        next();
-      }
-    } else {
-      try {
-        await useStore.getUserInfo();
-        const roles = useStore.roles;
-        if (roles.length === 0) {
-          ElMessage.error('没有权限');
-          next('/login'); // 直接重定向，无需return
-        } else if (userPermissionStore.addRoutes.length === 0) {
-          userPermissionStore.setRoutes(roles);
-          userPermissionStore.addRoutes.forEach((route: RouteRecordRaw) => router.addRoute(route));
-          next({...to, replace: true});
-        } else {
-          next(); // 已有路由无需再次添加，直接继续
-        }
-      } catch (err: any) {
-        // 可能需要错误处理逻辑，如重定向到错误页面
-      }
+    await useStore.getUserInfo();
+    const roles = useStore.roles.filter((r: string) => r !== '');
+    if (roles.length === 0) {
+      ElMessage.error('没有权限');
+      next('/login');
+      return;
     }
+    if (userPermissionStore.addRoutes.length === 0) {
+      userPermissionStore.setRoutes(roles);
+      userPermissionStore.addRoutes.forEach((route: RouteRecordRaw) => router.addRoute(route));
+      next({ ...to, replace: true });
+      return;
+    }
+    next();
   } else {
-    if (whiteTable.includes(to.path)) {
-      next(); // 白名单直接放行
-    } else {
-      ElMessage.error('请先登录');
-      next('/login'); // 登录页面重定向
-    }
+    ElMessage.error('请先登录');
+    next('/login');
   }
 });

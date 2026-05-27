@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const updateUserInfo = async(data)=>{
     try {
         data.CreateTime = new Date(data.CreateTime).toISOString().slice(0, 19).replace('T', ' ');
-        return await mysql.updateData('user',data,`Uid='${data.Uid}'`)
+        return await mysql.updateData('user',data,`uid='${data.uid}'`)
     }
     catch (err) {
         console.log(err)
@@ -15,7 +15,7 @@ const updateUserInfo = async(data)=>{
 }
 const removeUser = async(data)=>{
     try {
-        return await mysql.deleteData('user',`Uid='${data}'`)
+        return await mysql.deleteData('user',`uid='${data}'`)
     }
     catch (err) {
         console.log(err)

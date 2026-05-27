@@ -8,6 +8,7 @@ export  const userStore =defineStore('user',()=>{
     const roles=ref<string[]>([''])
     const token =ref<string>(getToken() ||'')
     const username =ref<string>('')
+    const avatar =ref<string>('')
     const getUserInfo = async ()=>{
         if(!token.value){
             return
@@ -20,6 +21,7 @@ export  const userStore =defineStore('user',()=>{
     )
         username.value=result.data.userInfo.username
         roles.value=result.data.userInfo.roles
+        avatar.value=result.data.userInfo.avatar || ''
         return result
     }
 
@@ -28,8 +30,9 @@ export  const userStore =defineStore('user',()=>{
         removeToken()
         token.value=''
         roles.value=[]
+        avatar.value=''
     }
-    return {roles,token,username,getToken,getUserInfo,logout}
+    return {roles,token,username,avatar,getToken,getUserInfo,logout}
 })
 export  function useUserStoreHook(){
 return userStore(store)

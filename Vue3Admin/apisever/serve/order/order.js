@@ -90,6 +90,7 @@ const finnishOrder =async(data)=>{
 }
 module.exports={
     writeOrder,
+    getOrderInfo,
     getOrderInfoByUid,
     getOrderInfoByBid,
     getOrderInfoByStatus,

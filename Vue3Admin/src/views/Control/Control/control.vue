@@ -41,8 +41,7 @@ const handleSubmit =async (data:any)=>{
   diaLogIsShow.value=false
 }
 const handleDelete = async (row: any) => {
-  console.log(row.Uid)
-  const res = await removeUser(row)
+  const res = await removeUser(row.uid)
   tableData.value=(await getUserList()).data.results
   ElMessage.success(res.data.msg)
 }
@@ -54,7 +53,7 @@ const handleDelete = async (row: any) => {
 
 
   <el-table :ref="tableRef" v-if="tableData.length" :data="tableData" border table-layout="auto" >
-  <el-table-column prop="Uid" label="Uid"/>
+  <el-table-column prop="uid" label="Uid"/>
   <el-table-column prop="username" label="Name"  />
   <el-table-column prop="email" label="Email" />
     <el-table-column prop="permissionGroupId" label="PermissionGroup"  />
@@ -86,7 +85,7 @@ const handleDelete = async (row: any) => {
    </el-form>
   </el-dialog>
   <div class="fixedBottom">
-    <div class="font">ps:在这一模块中,分别存在三个权限组,0,1,2,0代表超级管理员,1代表商家,2代表普通用户</div>
+    <div class="font">ps:在这一模块中,分别存在三个权限组,1代表超级管理员,2代表普通用户,3代表商家</div>
 
   </div>
 </template>

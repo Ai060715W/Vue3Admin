@@ -90,7 +90,7 @@ try{
     app.get('/getUserList',async (req, res) => {
        try {
            const payload = getInfo(req)
-           if (payload.permissionGroupId===0) {
+           if (payload.permissionGroupId === 1) {
                const result = await mysql.selectUserAll()
                res.jsonp(result)
            }
@@ -105,7 +105,9 @@ try{
     })
     app.get('/userInfo', async (req, res) => {
         const payload = getInfo(req)
-      try{  payload.roles = await findPermissionByUsername(payload.username)
+      try{  payload.roles = (await findPermissionByUsername(payload.username)).split(',')
+        const userData = await mysql.selectUser(payload.username)
+        if (userData) payload.avatar = userData.avatar || ''
         res.jsonp({
             userInfo: payload
         })
@@ -208,10 +210,63 @@ app.post('/createShop',async (req,res)=>{
         })
     }
 })
-    app.get('/BusinessInfoByUid', async (req, res) => {
-
+    // 管理员数据汇总
+    app.get('/adminSummary', async (req, res) => {
         try {
-            const data = getInfo(req).Uid
+            const payload = getInfo(req)
+            if ((await findPermissionByUsername(payload.username)).includes('Admin')) {
+                const userCount = await mysql.select('COUNT(*) as total', 'user')
+                const bizCount = await mysql.select('COUNT(*) as total', 'business')
+                const orderCount = await mysql.select('COUNT(*) as total', '`order`')
+                const productCount = await mysql.select('COUNT(*) as total', 'product')
+                const todoCount = await mysql.select('COUNT(*) as total', 'todo')
+                const recentOrders = await order.getOrderInfo(await mysql.select('*', '`order`', '', 'createTime desc limit 5'))
+                res.jsonp({
+                    summary: {
+                        userCount: userCount.results[0].total,
+                        bizCount: bizCount.results[0].total,
+                        orderCount: orderCount.results[0].total,
+                        productCount: productCount.results[0].total,
+                        todoCount: todoCount.results[0].total,
+                    },
+                    recentOrders: recentOrders
+                })
+            } else {
+                res.status(400).jsonp({ msg: '没有权限', code: 400 })
+            }
+        } catch (err) {
+            console.log(err)
+            res.jsonp({ msg: '获取失败', code: 400 })
+        }
+    })
+    // 商家数据汇总
+    app.get('/businessSummary', async (req, res) => {
+        try {
+            const payload = getInfo(req)
+            const bizInfo = await business.businessInfoByUid(payload.uid)
+            if (bizInfo.results.length) {
+                const bid = bizInfo.results[0].Bid
+                const productCount = await mysql.select('COUNT(*) as total', 'product', `Bid=${bid}`)
+                const orderCount = await mysql.select('COUNT(*) as total', '`order`', `Bid=${bid}`)
+                const recentOrders = await order.getOrderInfo(await mysql.select('*', '`order`', `Bid=${bid}`, 'createTime desc limit 5'))
+                res.jsonp({
+                    business: bizInfo.results[0],
+                    productCount: productCount.results[0].total,
+                    orderCount: orderCount.results[0].total,
+                    recentOrders: recentOrders
+                })
+            } else {
+                res.jsonp({ business: null, productCount: 0, orderCount: 0, recentOrders: [] })
+            }
+        } catch (err) {
+            console.log(err)
+            res.jsonp({ msg: '获取失败', code: 400 })
+        }
+    })
+
+    app.get('/BusinessInfoByUid', async (req, res) => {
+        try {
+            const data = getInfo(req).uid
             const result = await business.businessInfoByUid(data)
             res.jsonp(result)
         } catch (err) {
@@ -219,7 +274,6 @@ app.post('/createShop',async (req,res)=>{
                 msg: '获取失败', code: 400
             })
         }
-
     })
 // app.get('/BusinessInfo',async (req,res)=>{
 //     const data= getInfo(req).Uid
@@ -321,7 +375,7 @@ app.post('/SubmitOrder',async (req,res)=>{
 app.get('/getOrderListByUid',async (req,res)=>{
     try{
         const data={
-            Uid:getInfo(req).Uid
+            Uid:getInfo(req).uid
         }
        res.jsonp(( await order.getOrderInfoByUid(data)))
     }catch (err){
@@ -349,7 +403,7 @@ app.get('/getOrderListByBid',async (req,res)=>{
 app.get('/getOrderListByStatus',async (req,res)=>{
     try{
         const data={
-            Uid:getInfo(req).Uid,
+            Uid:getInfo(req).uid,
             status:req.query.status
         }
        res.jsonp(( await order.getOrderInfoByStatus(data)))
