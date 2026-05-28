@@ -36,7 +36,6 @@ const getAllProduct = async () => {
 };
 const updateProduct = async (data: any) => {
 
-
   const instance = ElLoading.service({
     text:'加载中'
   })
@@ -63,7 +62,6 @@ onMounted(async () => {
   },{deep:true} );
 
 });
-
 
 </script>
 
@@ -128,6 +126,5 @@ flex-grow: 1}
   background: #e6e6e6;
   z-index: 3;
 }
-
 
 </style>

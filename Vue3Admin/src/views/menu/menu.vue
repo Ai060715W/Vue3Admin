@@ -28,7 +28,7 @@ onMounted(async () => {
 
 <template>
   <div class="home-page">
-    <!-- ====== Hero 区域 ====== -->
+
     <section class="hero-section">
       <div class="hero-bg-decor"></div>
       <div class="hero-content">
@@ -36,7 +36,6 @@ onMounted(async () => {
       </div>
     </section>
 
-    <!-- ====== 入驻商家 ====== -->
     <section class="section-block" v-if="businessList && businessList.length">
       <div class="section-header">
         <h2 class="section-title">入驻商家</h2>
@@ -56,13 +55,12 @@ onMounted(async () => {
 </template>
 
 <style lang="scss" scoped>
-/* ===== 变量 ===== */
+
 $primary: #1a73e8;
 $text-dark: #1a1a2e;
 $text-gray: #666;
 $card-bg: #fff;
 
-/* ===== Hero ===== */
 .hero-section {
   position: relative;
   background: linear-gradient(160deg, #e8f0fe 0%, #d4e4fc 40%, #c5d9f8 70%, #eef3fb 100%);
@@ -98,7 +96,6 @@ $card-bg: #fff;
   line-height: 1.3;
 }
 
-/* ===== 通用区块 ===== */
 .section-block {
   padding: 60px 40px;
   max-width: 1200px;
@@ -139,7 +136,6 @@ $card-bg: #fff;
   &:hover { text-decoration: underline; }
 }
 
-/* ===== 商家 ===== */
 .shop-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

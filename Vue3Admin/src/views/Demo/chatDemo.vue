@@ -2,7 +2,6 @@
 import { ref, nextTick, onMounted, computed } from "vue"
 import { chatStream } from "@/serve/chat/chat"
 
-// ========== 类型定义 ==========
 interface ChatMessage {
   id: string
   role: 'user' | 'ai'
@@ -19,7 +18,6 @@ interface Conversation {
   updatedAt: string
 }
 
-// ========== 对话列表管理（localStorage 持久化） ==========
 const STORAGE_KEY = 'deepseek_conversations'
 
 const loadConversations = (): Conversation[] => {
@@ -46,7 +44,6 @@ const filteredConversations = computed(() => {
   return conversations.value.filter(c => c.title.toLowerCase().includes(kw))
 })
 
-// ========== 对话操作 ==========
 const createNewConv = () => {
   const now = new Date()
   const conv: Conversation = {
@@ -85,7 +82,6 @@ const updateConvTitle = () => {
   }
 }
 
-// ========== 聊天状态 ==========
 const userInput = ref('')
 const isLoading = ref(false)
 const messagesContainer = ref<HTMLElement | null>(null)
@@ -103,7 +99,6 @@ const scrollToBottom = async () => {
   }
 }
 
-// ========== 发送消息 ==========
 const send = async (msg?: string) => {
   const content = (msg || userInput.value).trim()
   if (!content || isLoading.value) return
@@ -169,7 +164,7 @@ onMounted(() => {
 
 <template>
   <div class="chat-layout">
-    <!-- ========== 左侧边栏 ========== -->
+
     <aside class="chat-sidebar">
       <div class="sidebar-header">
         <div class="sidebar-brand">
@@ -219,9 +214,8 @@ onMounted(() => {
       </div>
     </aside>
 
-    <!-- ========== 右侧主区域 ========== -->
     <main class="chat-main">
-      <!-- 空状态：欢迎页 -->
+
       <template v-if="isEmpty">
         <div class="welcome-zone">
           <div class="welcome-body">
@@ -325,7 +319,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* ========== 全局布局 ========== */
+
 .chat-layout {
   display: flex;
   height: calc(100vh - 60px);
@@ -334,7 +328,6 @@ onMounted(() => {
   overflow: hidden;
 }
 
-/* ========== 左侧边栏 ========== */
 .chat-sidebar {
   width: 272px; min-width: 272px;
   background: #fff;
@@ -433,13 +426,11 @@ onMounted(() => {
   text-align: center; color: #b0bec5; font-size: 12px; padding: 24px 0;
 }
 
-/* ========== 右侧主区域 ========== */
 .chat-main {
   flex: 1; display: flex; flex-direction: column;
   overflow: hidden; background: #f8fafb;
 }
 
-/* --- 空状态：欢迎页 --- */
 .welcome-zone {
   flex: 1; display: flex; align-items: center; justify-content: center;
   padding: 40px 24px; overflow-y: auto;
@@ -535,7 +526,6 @@ onMounted(() => {
 .feature-card h4 { margin: 0 0 4px; font-size: 14px; color: #1a1a2e; }
 .feature-card p  { margin: 0; font-size: 12px; color: #90a4ae; }
 
-/* --- 对话状态 --- */
 .chat-topbar {
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 24px; height: 50px; background: #fff;
@@ -622,7 +612,6 @@ onMounted(() => {
   30% { opacity: 1; transform: scale(1); }
 }
 
-/* 底部输入栏 */
 .chat-input-bar {
   padding: 12px 24px 16px; background: #fff;
   border-top: 1px solid #edf0f3; flex-shrink: 0;
@@ -669,7 +658,6 @@ onMounted(() => {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ========== 响应式 ========== */
 @media (max-width: 680px) {
   .chat-sidebar { width: 220px; min-width: 220px; }
   .feature-row { flex-direction: column; gap: 10px; }

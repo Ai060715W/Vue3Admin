@@ -5,4 +5,3 @@ app.listen(port,()=>{
     console.log('sever is running on port '+port)
 })
 
-

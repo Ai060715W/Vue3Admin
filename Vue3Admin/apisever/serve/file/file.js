@@ -1,8 +1,5 @@
 
 
-
-
-
 const fileExits = (md5Code) => {
   try {
 
@@ -12,6 +9,5 @@ const fileExits = (md5Code) => {
 };
 
 module.exports = {
-
 
 };

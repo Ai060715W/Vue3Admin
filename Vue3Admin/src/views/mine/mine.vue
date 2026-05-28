@@ -77,7 +77,7 @@ const goBusinessControl = () => router.push({ name: 'businessControl', params: {
 
 <template>
   <div class="mine-page" v-loading="loading">
-    <!-- 个人信息卡片 -->
+
     <div class="profile-card">
       <div class="profile-left">
         <el-avatar :size="64" :src="userStore.avatar" class="profile-avatar" />
@@ -94,7 +94,6 @@ const goBusinessControl = () => router.push({ name: 'businessControl', params: {
       </div>
     </div>
 
-    <!-- ====== 管理员仪表盘 ====== -->
     <template v-if="isAdmin">
       <div class="stat-grid">
         <div class="stat-card blue"><div class="stat-num">{{ adminSummary?.userCount ?? '-' }}</div><div class="stat-label">总用户数</div></div>

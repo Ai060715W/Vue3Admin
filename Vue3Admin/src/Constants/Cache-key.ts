@@ -1,6 +1,5 @@
  const SYSTEM_NAME= 'Vue3Admin'
 
-/** 缓存数据时用到的 Key */
 class CacheKey {
     static readonly ReFlushTOKEN = `${SYSTEM_NAME}-ReFlushToken-key`
     static readonly TOKEN = `${SYSTEM_NAME}-token-key`
@@ -11,6 +10,5 @@ class CacheKey {
     static readonly CACHED_VIEWS = `${SYSTEM_NAME}-cached-views-key`
     static readonly PERMISSION = `${SYSTEM_NAME}-permission-key`
 }
-
 
 export default CacheKey

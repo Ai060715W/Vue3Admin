@@ -17,7 +17,6 @@ onMounted(()=>{
   draw()
 })
 
-
 const audioElement=ref<HTMLAudioElement>()
 const dataArray=new Uint8Array(513)
 const handleUpload=async  (options:UploadRequestOptions)=>{
@@ -60,11 +59,6 @@ const draw =()=>{
         ctx.fillRect(x2, y,  barWidth-5,barHeight)
       }}
 
-
-
-
-
-
 }
 
 </script>
@@ -79,7 +73,6 @@ const draw =()=>{
     <canvas ref="canvasRef" >
 
     </canvas>
-
 
 </template>
 

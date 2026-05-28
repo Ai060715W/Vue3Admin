@@ -46,11 +46,9 @@ const handleDelete = async (row: any) => {
   ElMessage.success(res.data.msg)
 }
 
-
 </script>
 
 <template>
-
 
   <el-table :ref="tableRef" v-if="tableData.length" :data="tableData" border table-layout="auto" >
   <el-table-column prop="uid" label="Uid"/>

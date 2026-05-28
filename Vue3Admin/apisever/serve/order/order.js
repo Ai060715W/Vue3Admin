@@ -40,7 +40,6 @@ const getOrderInfo=async (data)=>{
             }
             return resultData
 
-
         }
     }
     catch(err){

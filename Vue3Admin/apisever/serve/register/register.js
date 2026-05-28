@@ -2,10 +2,8 @@ const mysql=require('../../utils/mysql')
 const nanoid = require('nanoid')
 const bcrypt = require('bcrypt')
 
-
 const register= async (data)=>{
 
-   //构造最终使用的json对象
    const registerData={
       uid:nanoid.nanoid(),
       username:data.username,
@@ -24,8 +22,6 @@ const register= async (data)=>{
       console.log(err)
   return false
    })
-
-
 
 }
 module.exports={

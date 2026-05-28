@@ -96,9 +96,8 @@ const isShow = ref(false);
   </div>
 </template>
 
-
 <style lang="scss" scoped>
-/* === 顶部导航栏 === */
+
 .top-header {
   display: flex;
   align-items: center;

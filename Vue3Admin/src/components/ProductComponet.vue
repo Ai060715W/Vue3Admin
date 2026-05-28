@@ -1,10 +1,7 @@
 <script setup lang="ts">
 
-
-
-const emit = defineEmits(['updateItem']); // 定义自定义事件名
+const emit = defineEmits(['updateItem']);
 const ProductList = defineModel('productList')
-
 
 </script>
 
@@ -47,7 +44,6 @@ const ProductList = defineModel('productList')
 <style scoped>
 .Num{
   display: flex;
-
 
 }
 .choiceNum{
@@ -107,8 +103,6 @@ bottom: 10%;
   text-align: left;
   background: #f5f5f5;
 
-
 }
-
 
 </style>

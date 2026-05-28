@@ -1,8 +1,6 @@
 const mysql =require('mysql2')
 const config =require('config')
 
-
-
 const createPool = ()  => {
     return mysql.createPool(config.get('dbConfig'))
 }
@@ -15,7 +13,7 @@ const select= async (columnName,tableName,where='',order='')=>{
         if (err) reject(err)
         else {
             connection.query(`select ${columnName} from ${tableName} ${where===''?'':'where '+ where} ${order===''?'':'order by '+ order}`,(err,results)=>{
-                connection.release()//释放连接
+                connection.release()
                 if (err) reject(err)
                 else resolve ({results})
 
@@ -31,14 +29,14 @@ const select= async (columnName,tableName,where='',order='')=>{
 }
 const insertData = async (table, data) => {
     try {
-        const connection = await pool.promise().getConnection(); // 使用await获取连接
+        const connection = await pool.promise().getConnection();
         const [result] = await connection.query(`INSERT INTO ${table} SET ?`, data);
         console.log(`成功插入，受影响的行数: ${result.affectedRows}`);
-        connection.release(); // 成功后释放连接
+        connection.release();
         return result;
     } catch (error) {
         console.error('插入数据时出错:', error);
-        throw error; // 重新抛出错误，以便外部调用者可以处理
+        throw error;
     }
 };
 const deleteData = async (table, where) => {
@@ -70,7 +68,6 @@ const updateData = async (table, data, where) => {
 
 };
 
-
 const selectUserAll= async ()=>{
     try{
 
@@ -85,10 +82,10 @@ const selectUser = (username) => {
     return new Promise((resolve, reject) => {
         select('*', 'user', `username='${username}'`)
             .then((res) => {
-                resolve(res.results[0]); // 当查询成功时，通过resolve传递结果
+                resolve(res.results[0]);
             })
             .catch((error) => {
-                reject(error); // 如果查询出错，通过reject传递错误
+                reject(error);
             });
     });
 };

@@ -11,12 +11,9 @@ export  const permission: Directive={
                 await useUserStoreHook().getUserInfo()
                 if(Array.isArray(userStore.roles)) {
                     const hasPermission = userStore.roles?.some((role) => permissionRoles.includes(role))
-                    //hasPermission||(el.style.display="none") 隐藏
-                    hasPermission || el.parentNode?.removeChild(el)//没有权限销毁节点
+
+                    hasPermission || el.parentNode?.removeChild(el)
                 }
-
-
-
 
             } else {
                 throw new Error("need roles! Like v-permission=\"['admin','editor']\"")

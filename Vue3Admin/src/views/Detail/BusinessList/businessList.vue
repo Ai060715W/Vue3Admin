@@ -33,25 +33,22 @@ const goHome = () => router.push('/')
 
 <template>
   <div class="list-page">
-    <!-- 面包屑 -->
+
     <div class="breadcrumb">
       <span class="crumb" @click="goHome">首页</span>
       <span class="sep">/</span>
       <span class="crumb active">全部商家</span>
     </div>
 
-    <!-- 标题 -->
     <div class="page-header">
       <h1>全部商家</h1>
       <p class="subtitle">发现品质好店，享受优质服务</p>
     </div>
 
-    <!-- 加载中 -->
     <div v-if="loading" class="loading-box">
       <span>加载中...</span>
     </div>
 
-    <!-- 商家网格 -->
     <div v-else class="shop-grid">
       <div
         class="shop-card"
@@ -74,7 +71,6 @@ const goHome = () => router.push('/')
       </div>
     </div>
 
-    <!-- 空状态 -->
     <div v-if="!loading && businessList.length === 0" class="empty-box">
       <p>暂未收录商家，敬请期待</p>
     </div>

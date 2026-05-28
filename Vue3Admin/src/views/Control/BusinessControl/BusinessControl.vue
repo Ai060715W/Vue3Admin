@@ -50,8 +50,6 @@ Bid.value=useRoute().params.Bid
 instance.close()
 })
 
-
-
 const handleEdit=async(data:any)=>{
   title.value='编辑商品'
   isEdit.value=true

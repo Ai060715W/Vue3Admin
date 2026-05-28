@@ -1,4 +1,4 @@
-//该文件定义了一系列表单验证规则
+
 export const passwordRules=(rule:any, value:string, callback:any)=>{
     const passwordReg=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%\.^&+=!])[A-Za-z\d.@$!%*?&]{8,}$/
     if (!passwordReg.test(value)){
